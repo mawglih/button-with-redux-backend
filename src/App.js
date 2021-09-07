@@ -1,23 +1,38 @@
-import logo from './logo.svg';
+import { useDispatch, useSelector } from 'react-redux';
+import { incrementCounter, createCounter, resetMyCounter } from './store/actions';
+import { useEffect } from 'react';
+import Button from './components/button';
+import Text from './components/text';
 import './App.css';
 
 function App() {
+  const dispatch = useDispatch();
+  const { counter } = useSelector(state => state.counters);
+  const onReset = id => dispatch(resetMyCounter(id));
+  const onIncrement = id => dispatch(incrementCounter(id));
+  const handleClick = e => {
+    onIncrement(counter.id);
+  }
+  const resetCounter = e => {
+    onReset(counter.id);
+  }
+  useEffect(() => {
+    dispatch(createCounter());
+  }, [dispatch]);
+  console.log('counter', counter);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Button
+        handleClick={e => handleClick(e)}
+        primaryText='Click me'
+        primaryColor='green'
+      />
+      <Text text={counter.value} />
+      <Button
+        handleClick={e => resetCounter(e)}
+        primaryText='Reset counter'
+        primaryColor='violet'
+      />
     </div>
   );
 }
